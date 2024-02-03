@@ -28,8 +28,7 @@ class VoidGame : JavaPlugin() {
                 participant.player.teleport(participant.beforePos)
             }
             Bukkit.unloadWorld(arena.world, false)
-            val file = File("${Bukkit.getWorldContainer().path}/${arena.world.name}")
-            file.deleteRecursively()
+            arena.world.worldFolder.deleteRecursively()
         }
     }
 }
