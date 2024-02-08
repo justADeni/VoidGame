@@ -43,6 +43,10 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
         material = pillarMaterial
     )
 
+    fun participant(player: Player): Participant? {
+        return participants.firstOrNull { it.player == player }
+    }
+
     fun checkSurvivors() {
         val alive = participants.filter { it.player.gameMode == GameMode.SURVIVAL }
         if (alive.size == 1) {

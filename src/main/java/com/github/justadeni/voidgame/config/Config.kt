@@ -26,7 +26,7 @@ object Config {
     }
 
     data class Sond(val sound: Sound, val volume: Float, val pitch: Float) {
-        fun playTo(player: Player) = player.playSound(player, sound, volume, pitch)
+        fun playTo(vararg player: Player) = player.forEach { it.playSound(it, sound, volume, pitch) }
     }
 
 }
