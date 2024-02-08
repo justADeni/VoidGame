@@ -2,8 +2,10 @@ package com.github.justadeni.voidgame
 
 import com.github.justadeni.voidgame.arena.Arenas
 import com.github.justadeni.voidgame.command.Command
+import com.github.justadeni.voidgame.listeners.BlockPlace
 import com.github.justadeni.voidgame.listeners.PlayerDeath
 import com.github.justadeni.voidgame.listeners.PlayerMove
+import com.github.justadeni.voidgame.listeners.PlayerRespawn
 import com.github.justadeni.voidgame.misc.FilteredItems
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -20,6 +22,8 @@ class VoidGame : JavaPlugin() {
         getCommand("voidgame")!!.setExecutor(Command())
         server.pluginManager.registerEvents(PlayerMove(),this)
         server.pluginManager.registerEvents(PlayerDeath(),this)
+        server.pluginManager.registerEvents(PlayerRespawn(), this)
+        server.pluginManager.registerEvents(BlockPlace(), this)
         FilteredItems.reload()
     }
 

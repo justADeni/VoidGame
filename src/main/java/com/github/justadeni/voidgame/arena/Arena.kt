@@ -36,8 +36,6 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
         }
     }
 
-    //private val itemGiver = ItemGiver()
-
     private val itemgivingTask = RepeatingTask({
             participants
                 .filter { it.player.gameMode == GameMode.SURVIVAL }

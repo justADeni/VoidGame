@@ -5,25 +5,38 @@ import com.github.justadeni.voidgame.misc.FilteredItems
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
+import java.util.concurrent.ConcurrentHashMap
 
 object Config {
 
     private val config by lazy { VoidGame.plugin.config }
+
+    private val cache = mutableMapOf<String, Any>()
 
     fun reload() {
         VoidGame.plugin.reloadConfig()
         FilteredItems.reload()
     }
 
-    fun string(key: String) = config.getString(key)!!
+    private inline fun <reified T : Any> get(key: String): T {
+        var value = cache[key]
+        if (value != null)
+            return value as T
 
-    fun int(key: String) = config.getInt(key)
+        value = config.get(key) as T
+        cache[key] = value
+        return value
+    }
 
-    fun bool(key: String) = config.getBoolean(key)
+    fun string(key: String) = get<String>(key)
 
-    fun material(key: String) = Material.valueOf(config.getString(key) ?: "STONE")
+    fun int(key: String) = get<Int>(key)
 
-    fun list(key: String): List<String> = config.getStringList(key)
+    fun bool(key: String) = get<Boolean>(key)
+
+    fun material(key: String) = Material.valueOf(string(key))
+
+    fun list(key: String) = get<List<String>>(key)
 
     fun sound(key: String): Sond {
         val string = string(key).split(",", limit = 3)
