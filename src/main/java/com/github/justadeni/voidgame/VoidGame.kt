@@ -2,6 +2,8 @@ package com.github.justadeni.voidgame
 
 import com.github.justadeni.voidgame.arena.Arenas
 import com.github.justadeni.voidgame.command.Command
+import com.github.justadeni.voidgame.listeners.PlayerDeath
+import com.github.justadeni.voidgame.listeners.PlayerMove
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
@@ -16,7 +18,8 @@ class VoidGame : JavaPlugin() {
         plugin = this
         saveDefaultConfig()
         getCommand("voidgame")!!.setExecutor(Command())
-
+        server.pluginManager.registerEvents(PlayerMove(),this)
+        server.pluginManager.registerEvents(PlayerDeath(),this)
     }
 
     override fun onDisable() {

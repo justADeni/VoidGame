@@ -3,6 +3,7 @@ package com.github.justadeni.voidgame.arena
 import com.github.justadeni.voidgame.worlds.VoidChunkGenerator
 import org.bukkit.GameMode
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.entity.Player
 
 
@@ -14,6 +15,10 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
         val players = mutableSetOf<Player>()
 
         var pillarDist = 0
+
+        var pillarHeight = 0
+
+        var pillarMaterial = Material.BEDROCK
 
         var itemTime = 0
 
@@ -30,7 +35,13 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
         get() = field
         private set(value) { field = value }
 
-    val world = VoidChunkGenerator.newworld("${Arenas.size()}", pillarDist)
+    val world = VoidChunkGenerator.newworld(
+        name = "vg${Arenas.size()}",
+        playerAmount = participants.size,
+        pillarDist = pillarDist,
+        pillarHeight = 0,
+        material = Material.AIR
+    )
 
     fun checkSurvivors() {
         val alive = participants.filter { it.player.gameMode == GameMode.SURVIVAL }

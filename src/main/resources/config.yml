@@ -1,7 +1,6 @@
 pillar:
   start-y: 70
   height: 10
-  material: "BEDROCK"
 
 distance-between-pillars:
   small: 12

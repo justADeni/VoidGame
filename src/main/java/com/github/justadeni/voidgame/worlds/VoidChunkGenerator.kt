@@ -1,5 +1,7 @@
 package com.github.justadeni.voidgame.worlds
 
+import com.github.justadeni.voidgame.config.Config
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.WorldCreator
@@ -31,11 +33,25 @@ class VoidChunkGenerator private constructor(): ChunkGenerator() {
 
     companion object {
 
-        fun newworld(name: String, pillarDist: Int): World {
+        private fun coords(playerAmount: Int, pillarDist: Int, pillarHeight: Int) {
+
+        }
+
+        private fun placepillar(location: Location, height: Int, material: Material) {
+            for (i in 0..< height) {
+                location.block.type = material
+                location.add(0.0,1.0,0.0)
+            }
+        }
+
+        fun newworld(name: String, playerAmount: Int, pillarDist: Int, pillarHeight: Int, material: Material): World {
             val wc = WorldCreator(name)
             wc.generator(VoidChunkGenerator())
             wc.generateStructures(false)
             wc.type(WorldType.FLAT)
+
+
+
             return wc.createWorld()!!
         }
 
