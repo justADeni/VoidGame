@@ -1,11 +1,41 @@
-pillar:
+defaults:
   start-y: 70
-  height: 10
+  height:
+    editable: true
+    min: 3
+    max: 30
+    default: 10
+  distance-between-pillars:
+    editable: true
+    min: 10
+    max: 50
+    small: 12
+    medium: 18
+    large: 28
+  material:
+    editable: true
+    default: BEDROCK
+    filter:
+      - "GOLD"
+      - "DIAMOND"
+      - "IRON"
+      - "WOOD"
+  itemtime:
+    editable: true
+    default: 30
+    min: 5
+    max: 60
+  total-rounds:
+    editable: true
+    default: 10
+    min: 3
+    max: 30
 
-distance-between-pillars:
-  small: 12
-  medium: 18
-  large: 28
+drop-item:
+  filter:
+    - "_BLOCK"
+    - "STICK"
+    - "CHEST"
 
 messages:
   game-starting: "Game starting."
