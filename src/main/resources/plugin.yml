@@ -2,6 +2,7 @@ name: VoidGame
 version: '${project.version}'
 main: com.github.justadeni.voidgame.VoidGame
 api-version: '1.20'
+depend: [kLib]
 commands:
   voidgame:
     aliases: [vg]

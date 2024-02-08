@@ -33,6 +33,7 @@ defaults:
 
 drop-item:
   filter:
+    - "AIR"
     - "_BLOCK"
     - "STICK"
     - "CHEST"
