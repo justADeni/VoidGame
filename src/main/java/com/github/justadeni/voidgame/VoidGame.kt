@@ -30,8 +30,8 @@ class VoidGame : JavaPlugin() {
 
                 participant.player.teleport(participant.beforePos)
             }
-            Bukkit.unloadWorld(arena.world, false)
-            arena.world.worldFolder.deleteRecursively()
+            Bukkit.unloadWorld(arena.arenaworld.world, false)
+            arena.arenaworld.world.worldFolder.deleteRecursively()
         }
     }
 }

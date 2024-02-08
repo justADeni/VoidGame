@@ -1,13 +1,13 @@
 package com.github.justadeni.voidgame.arena
 
-import com.github.justadeni.voidgame.worlds.VoidChunkGenerator
+import com.github.justadeni.voidgame.worlds.ArenaWorld
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
 
-class Arena private constructor(val participants: List<Participant>, pillarDist: Int, private val itemTime: Int, private val totalRounds: Int) {
+class Arena private constructor(val participants: List<Participant>, pillarDist: Int, pillarHeight: Int, pillarMaterial: Material, private val itemTime: Int, private val totalRounds: Int) {
 
     data class Participant(val beforePos: Location, val player: Player, var won: Int, var trollmode: Boolean = false)
 
@@ -25,7 +25,7 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
         var totalRounds = 0
 
         fun build(): Arena {
-            val arena = Arena(players.map { Participant(it.location, it, 0) }, pillarDist, itemTime, totalRounds)
+            val arena = Arena(players.map { Participant(it.location, it, 0) }, pillarDist, pillarHeight, pillarMaterial, itemTime, totalRounds)
             Arenas.add(arena)
             return arena
         }
@@ -35,12 +35,12 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
         get() = field
         private set(value) { field = value }
 
-    val world = VoidChunkGenerator.newworld(
+    val arenaworld = ArenaWorld(
         name = "vg${Arenas.size()}",
         playerAmount = participants.size,
         pillarDist = pillarDist,
-        pillarHeight = 0,
-        material = Material.AIR
+        pillarHeight = pillarHeight,
+        material = pillarMaterial
     )
 
     fun checkSurvivors() {
