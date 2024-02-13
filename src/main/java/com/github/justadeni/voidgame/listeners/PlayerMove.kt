@@ -1,5 +1,6 @@
 package com.github.justadeni.voidgame.listeners
 
+import com.github.justadeni.voidgame.arena.Arena
 import com.github.justadeni.voidgame.arena.Arenas
 import com.github.justadeni.voidgame.config.Config
 import org.bukkit.GameMode
@@ -21,6 +22,7 @@ class PlayerMove: Listener {
                 val arena = Arenas.ofPlayer(e.player) ?: return
                 val participant = arena.participants.firstOrNull { it.player == e.player } ?: return
                 participant.player.gameMode = GameMode.SPECTATOR
+                arena.announce(Arena.Event.DIE, e.player)
             }
         }
     }

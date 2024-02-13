@@ -1,5 +1,6 @@
 package com.github.justadeni.voidgame.arena
 
+import com.github.justadeni.voidgame.config.Config
 import com.github.justadeni.voidgame.misc.GeneralUtils.give
 import com.github.justadeni.voidgame.misc.FilteredItems
 import com.github.justadeni.voidgame.misc.RepeatingTask
@@ -14,7 +15,7 @@ import org.bukkit.entity.Player
 
 class Arena private constructor(val participants: List<Participant>, pillarDist: Int, pillarHeight: Int, pillarMaterial: Material, itemTime: Int, private val totalRounds: Int) {
 
-    data class Participant(val beforePos: Location, val player: Player, var won: Int, var trollmode: Boolean = false)
+    data class Participant(val beforePos: Location, var player: Player, var won: Int, var trollmode: Boolean = false)
 
     class ArenaBuilder() {
         val players = mutableSetOf<Player>()
@@ -51,11 +52,11 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
         private set(value) { field = value }
 
     val arenaworld = ArenaWorld(
-        name = "vg${Arenas.size()}",
-        playerAmount = participants.size,
-        pillarDist = pillarDist,
-        pillarHeight = pillarHeight,
-        material = pillarMaterial
+        "vg${Arenas.size()}",
+        participants.size,
+        pillarDist,
+        pillarHeight,
+        pillarMaterial
     )
 
     val placedBlocks = mutableListOf<Location>()
@@ -83,11 +84,31 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
         return participants.firstOrNull { it.player == player }
     }
 
-    fun checkSurvivors() {
-        val alive = participants.filter { it.player.gameMode == GameMode.SURVIVAL }
+    enum class Event {
+        LEAVE,
+        REJOIN,
+        DIE,
+        WIN
+    }
+
+    fun announce(event: Event, player: Player): Unit = when(event) {
+        Event.LEAVE -> TODO()
+        Event.REJOIN -> TODO()
+        Event.DIE -> TODO()
+        Event.WIN -> TODO()
+    }
+
+    private fun checkSurvivors() {
+        val (alive, dead) = participants.partition { it.player.gameMode == GameMode.SURVIVAL }
         if (alive.size == 1) {
-            //TODO: win round messages and sounds here
+
         }
+    }
+
+    fun end() {
+        itemgivingTask.stop()
+        Arenas.remove(this)
+        participants.forEach { if (it.player.isOnline) it.player.teleport(it.beforePos) }
     }
 
 }

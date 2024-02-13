@@ -1,5 +1,6 @@
 package com.github.justadeni.voidgame.listeners
 
+import com.github.justadeni.voidgame.arena.Arena
 import com.github.justadeni.voidgame.arena.Arenas
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -10,7 +11,7 @@ class PlayerDeath: Listener {
     @EventHandler
     fun onPlayerDeath(e: PlayerDeathEvent) {
         val arena = Arenas.ofPlayer(e.entity) ?: return
-        arena.checkSurvivors()
+        arena.announce(Arena.Event.DIE, e.entity)
     }
 
 }
