@@ -125,6 +125,12 @@
           <scope>provided</scope>
       </dependency>
       <dependency>
+          <groupId>commons-io</groupId>
+          <artifactId>commons-io</artifactId>
+          <version>2.11.0</version>
+          <scope>compile</scope>
+      </dependency>
+      <dependency>
           <groupId>org.jetbrains.kotlinx</groupId>
           <artifactId>kotlinx-coroutines-core</artifactId>
           <version>1.7.3</version>
@@ -133,8 +139,23 @@
       <dependency>
           <groupId>com.github.justADeni</groupId>
           <artifactId>kLib</artifactId>
-          <version>6c3e569bd2</version>
+          <version>0.0.9</version>
           <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>com.github.justADeni</groupId>
+          <artifactId>ColorfulGUI</artifactId>
+          <version>spigot-318fa34361-1</version>
+      </dependency>
+      <dependency>
+          <groupId>com.github.justadeni</groupId>
+          <artifactId>VoidGame</artifactId>
+          <version>0.0.3</version>
+      </dependency>
+      <dependency>
+          <groupId>com.github.xflyiwnl</groupId>
+          <artifactId>ColorfulGUI</artifactId>
+          <version>99f1639034</version>
       </dependency>
   </dependencies>
 </project>

@@ -7,17 +7,22 @@ import com.github.justadeni.voidgame.misc.FilteredItems
 import com.zorbeytorunoglu.kLib.MCPlugin
 import com.zorbeytorunoglu.kLib.task.repeatAsync
 import com.zorbeytorunoglu.kLib.task.suspendFunction
+import me.xflyiwnl.colorfulgui.ColorfulGUI
+import me.xflyiwnl.colorfulgui.`object`.Gui
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
+import kotlin.concurrent.thread
 
 class VoidGame : JavaPlugin() {
 
     companion object {
         lateinit var plugin: JavaPlugin
+        lateinit var gui: ColorfulGUI
     }
 
     override fun onEnable() {
         plugin = this
+        gui = ColorfulGUI(this)
         saveDefaultConfig()
         getCommand("voidgame")!!.setExecutor(Command())
         server.pluginManager.registerEvents(PlayerMove(),this)
