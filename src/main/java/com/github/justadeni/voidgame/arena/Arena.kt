@@ -20,15 +20,15 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
     class ArenaBuilder() {
         val players = mutableSetOf<Player>()
 
-        var pillarDist = 0
+        var pillarDist = Config.int("config.defaults.distance-between-pillars.medium")
 
-        var pillarHeight = 0
+        var pillarHeight = Config.int("config.defaults.height.default")
 
-        var pillarMaterial = Material.BEDROCK
+        var pillarMaterial = Config.material("config.defaults.material.default")
 
-        var itemTime = 0
+        var itemTime = Config.int("config.defaults.itemtime.default")
 
-        var totalRounds = 0
+        var totalRounds = Config.int("config.defaults.total-rounds.default")
 
         fun build(): Arena {
             val arena = Arena(players.map { Participant(it.location, it, 0) }, pillarDist, pillarHeight, pillarMaterial, itemTime, totalRounds)

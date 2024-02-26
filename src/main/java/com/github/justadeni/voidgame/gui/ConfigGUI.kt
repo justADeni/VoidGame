@@ -1,10 +1,9 @@
 package com.github.justadeni.voidgame.gui
 
-import com.github.justadeni.countries.Countries
-import com.github.justadeni.countries.config.Config
-import com.github.justadeni.countries.utils.Logger
-import com.github.justadeni.countries.utils.TextUtils.asAction
-import com.github.justadeni.countries.utils.TextUtils.replace
+import com.github.justadeni.voidgame.VoidGame
+import com.github.justadeni.voidgame.config.Config
+import com.github.justadeni.voidgame.misc.TextUtils.asAction
+import com.github.justadeni.voidgame.misc.TextUtils.replace
 import me.xflyiwnl.colorfulgui.`object`.Gui
 import me.xflyiwnl.colorfulgui.`object`.GuiItem
 import me.xflyiwnl.colorfulgui.`object`.PaginatedGui
@@ -48,7 +47,7 @@ class ConfigGUI(player: Player, val path: String): ColorfulProvider<PaginatedGui
             if (additional.containsKey(key))
                 continue
 
-            gui.addMask(key, Countries.gui.staticItem()
+            gui.addMask(key, VoidGame.gui.staticItem()
                 .material(Config.material("$path.items.$key.material"))
                 .name(Config.string("$path.items.$key.name")
                     .run { replace(replace) }
@@ -101,10 +100,9 @@ class ConfigGUI(player: Player, val path: String): ColorfulProvider<PaginatedGui
     }
 
     fun open() {
-
         object : BukkitRunnable() {
             override fun run() {
-                Countries.gui.paginated()
+                VoidGame.gui.paginated()
                     .title(Config.string("$path.title")
                         .run { replace(replace) }
                     )
@@ -113,7 +111,7 @@ class ConfigGUI(player: Player, val path: String): ColorfulProvider<PaginatedGui
                     .holder(this@ConfigGUI)
                     .build()
             }
-        }.runTaskLater(Countries.plugin, 1)
+        }.runTaskLater(VoidGame.plugin, 1)
     }
 
 }

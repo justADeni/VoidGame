@@ -54,9 +54,9 @@ object Config {
         cache.clear()
     }
 
-    val NOT_FOUND: String by lazy { string("messages.error.not-found") }
+    val NOT_FOUND: String by lazy { string("config.messages.not-found") }
 
-    val PREFIX: String by lazy { string("country-config.plugin-prefix").colorize()!! }
+    val PREFIX: String by lazy { string("config.messages.prefix").colorize()!! }
 
     // null == try again, exception == failed
     @Throws(ConfigurationException::class)
@@ -67,10 +67,12 @@ object Config {
                 return value as T
             } catch (e: Exception) {
                 cache.remove(path)
+                /*
                 Logger.warn(string("messages.console.error-type")
                     .replace("%value%", value.toString())
                     .replace("%type%", T::class.java.simpleName)
                     .replace("%file%", path.split(".")[0] + ".yml"))
+                */
             }
         }
         val split = path.split(".", limit = 2)
@@ -81,20 +83,20 @@ object Config {
         if (fileconfiguration == null) {
             val file = File(datafolder.path + "/" + filename)
             if (file.exists()) {
-                Logger.warn(string("messages.console.restoring-file").replace("%file%", filename))
+                //Logger.warn(string("messages.console.restoring-file").replace("%file%", filename))
             } else {
                 val url: URL? = VoidGame::class.java.getResource("/${filename}")
                 if (url == null) {
-                    Logger.warn(string("messages.console.error-file").replace("%file%", filename))
+                    //Logger.warn(string("messages.console.error-file").replace("%file%", filename))
                     throw ConfigurationException()
                 }
-                Logger.warn(string("messages.console.restoring-file").replace("%file%", filename))
+                //Logger.warn(string("messages.console.restoring-file").replace("%file%", filename))
                 FileUtils.copyURLToFile(url, file)
             }
             fileconfiguration = try {
                 YamlConfiguration.loadConfiguration(file)
             } catch (e: IllegalStateException) {
-                Logger.warn(string("messages.console.error-file").replace("%file%", filename))
+                //Logger.warn(string("messages.console.error-file").replace("%file%", filename))
                 throw ConfigurationException()
             }
             configs[split[0]] = fileconfiguration!!
@@ -104,7 +106,7 @@ object Config {
         if (found == null) {
             val url: URL? = VoidGame::class.java.getResource("/${filename}")
             if (url == null) {
-                Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
+                //Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
                 throw ConfigurationException()
             }
             val text = try {
@@ -113,20 +115,20 @@ object Config {
                 stream.close()
                 String(bytes, StandardCharsets.UTF_8)
             } catch (e: IOException) {
-                Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
+                //Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
                 throw ConfigurationException()
             }
             val tempfile = try {
                 File(datafolder.path + "/tempfile.yml")
             } catch (e: NullPointerException) {
-                Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
+                //Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
                 throw ConfigurationException()
             }
             tempfile.writeText(text)
             val tempfileconfiguration = try {
                 YamlConfiguration.loadConfiguration(tempfile)
             } catch (e: IllegalStateException) {
-                Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
+                //Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
                 throw ConfigurationException()
             } finally {
                 tempfile.delete()
@@ -136,11 +138,11 @@ object Config {
             if (tempvalue is T) {
                 fileconfiguration.set(split[1], tempvalue)
                 fileconfiguration.save(File(datafolder, filename))
-                Logger.warn(string("messages.console.restoring-key").replace("%file%", filename).replace("%key%", split[1]))
+                //Logger.warn(string("messages.console.restoring-key").replace("%file%", filename).replace("%key%", split[1]))
                 cache[path] = tempvalue as Any
                 return tempvalue
             } else {
-                Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
+                //Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
                 throw ConfigurationException()
             }
         }
@@ -148,18 +150,12 @@ object Config {
             cache[path] = found
             return found
         } else {
-            Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
+            //Logger.warn(string("messages.console.error-key").replace("%file%", filename).replace("%key%", split[1]))
             throw ConfigurationException()
         }
-
-        //throw ConfigurationException().also { it.printStackTrace() }
     }
 
     fun string(path: String): String {
-        /*
-        val split = path.split(".", limit = 2)
-        return cache.get(path) { configs[split[0]]?.get(split[1]) as String? } ?: "Error"
-        */
         return try {
             get<String>(path) ?: string(path)
         } catch (e: ConfigurationException) {
@@ -167,18 +163,7 @@ object Config {
         }
     }
 
-    /*
-    fun nstring(path: String): String? {
-        val split = path.split(".", limit = 2)
-        return cache.get(path) { configs[split[0]]?.get(split[1]) as String? }
-    }
-    */
-
     fun int(path: String): Int {
-        /*
-        val split = path.split(".", limit = 2)
-        return cache.get(path) { configs[split[0]]?.get(split[1]) as Int } ?: 42
-        */
         return try {
             get<Int>(path) ?: int(path)
         } catch (e: ConfigurationException) {
@@ -187,10 +172,6 @@ object Config {
     }
 
     fun list(path: String): List<String> {
-        /*
-        val split = path.split(".", limit = 2)
-        return cache.get(path) { configs[split[0]]?.getStringList(split[1]) } ?: emptyList()
-        */
         return try {
             get<List<String>>(path) ?: list(path)
         } catch (e: ConfigurationException) {
@@ -199,10 +180,6 @@ object Config {
     }
 
     fun bool(path: String): Boolean {
-        /*
-        val split = path.split(".", limit = 2)
-        return cache.get(path) { configs[split[0]]?.getBoolean(split[1]) } ?: return false
-        */
         return try {
             get<Boolean>(path) ?: bool(path)
         } catch (e: ConfigurationException) {
@@ -210,16 +187,10 @@ object Config {
         }
     }
 
+    /*
     private val colorregex = Regex("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\s*,\\s*){2}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\$")
 
     fun color(path: String): Color {
-        /*
-        val split = path.split(".", limit = 2)
-        return cache.get(path) {
-            val parts = configs[split[0]]?.getString(split[1])!!.split(",")
-            Color(parts[0].toInt(), parts[1].toInt(), parts[2].toInt())
-        } ?: return Color(0,0,0)
-        */
         val string = string(path)
         if (string.matches(colorregex)) {
             val split = string.split(",")
@@ -228,13 +199,9 @@ object Config {
             return Color(0,0,0)
         }
     }
+    */
 
     fun material(path: String): Material {
-        /*
-        val split = path.split(".", limit = 2)
-        val string = cache.get(path) { configs[split[0]]?.get(split[1]) as String? } ?: "STICK"
-        return Material.valueOf(string)
-        */
         return try {
             Material.valueOf(string(path))
         } catch (e: EnumConstantNotPresentException) {
@@ -243,10 +210,6 @@ object Config {
     }
 
     fun configurationSection(path: String): List<String> {
-        /*
-        val split = path.split(".", limit = 2)
-        return configs[split[0]]?.getConfigurationSection(split[1])?.getKeys(false)?.toList() ?: emptyList()
-        */
         return try {
             get<ConfigurationSection>(path)?.getKeys(false)?.toList() ?: configurationSection(path)
         } catch (e: ConfigurationException) {
