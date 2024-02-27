@@ -16,6 +16,9 @@ class CappedInteger(default: Int, private val min: Int, private val max: Int) {
         get() = field
         private set(newvalue) { field = newvalue }
 
+    val final : Boolean
+        get() = min == max
+
     operator fun plus(another: Int): Result {
         if (value + another > max)
             return Result.DENIED
