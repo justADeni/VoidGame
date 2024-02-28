@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.PlayerInventory
 import org.bukkit.scheduler.BukkitRunnable
 
-class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): ColorfulProvider<Gui>(player) {
+class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): ColorfulProvider<Gui>(player, 1) {
 
     var material = Config.material("config.defaults.material.default")
 
@@ -82,7 +82,7 @@ class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): Color
             materials = arrayOf(Material.DARK_PRISMARINE, Material.PRISMARINE_CRYSTALS, Material.PRISMARINE_CRYSTALS),
             masks = "RTY",
             CappedInteger(
-                Config.int("config.defaults.distance-between-pillars.medium"),
+                Config.int("config.defaults.distance-between-pillars.default"),
                 Config.int("config.defaults.distance-between-pillars.min"),
                 Config.int("config.defaults.distance-between-pillars.max")
             )
@@ -110,11 +110,16 @@ class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): Color
             )
         )
 
-        gui.addMask("M", VoidGame.gui.staticItem()
+        gui.addMask("M", VoidGame.gui.dynamicItem()
             .material(Material.STRUCTURE_VOID)
             .name("&ePick Pillar Material")
             .action {
                 ChooseMaterialGUI(player, this).open()
+            }
+            .update {
+                val meta = it.item.itemMeta
+                it.item.type = Material.entries.random()
+                it.item.itemMeta = meta
             }
             .flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
             .build()

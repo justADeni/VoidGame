@@ -2,6 +2,7 @@ package com.github.justadeni.voidgame
 
 import com.github.justadeni.voidgame.arena.Arenas
 import com.github.justadeni.voidgame.command.Command
+import com.github.justadeni.voidgame.command.TabComplete
 import com.github.justadeni.voidgame.listeners.*
 import com.github.justadeni.voidgame.misc.FilteredItems
 import com.zorbeytorunoglu.kLib.MCPlugin
@@ -25,6 +26,7 @@ class VoidGame : JavaPlugin() {
         gui = ColorfulGUI(this)
         saveDefaultConfig()
         getCommand("voidgame")!!.setExecutor(Command())
+        getCommand("voidgame")!!.tabCompleter = TabComplete()
         server.pluginManager.registerEvents(PlayerMove(),this)
         server.pluginManager.registerEvents(PlayerDeath(),this)
         server.pluginManager.registerEvents(PlayerRespawn(), this)

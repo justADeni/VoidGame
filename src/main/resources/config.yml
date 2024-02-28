@@ -6,12 +6,9 @@ defaults:
     max: 30
     default: 10
   distance-between-pillars:
-    editable: true
     min: 10
     max: 50
-    small: 12
-    medium: 18
-    large: 28
+    default: 18
   material:
     editable: true
     default: BEDROCK
@@ -21,12 +18,10 @@ defaults:
       - "IRON"
       - "WOOD"
   itemtime:
-    editable: true
     default: 30
     min: 5
     max: 60
   total-rounds:
-    editable: true
     default: 10
     min: 3
     max: 30
