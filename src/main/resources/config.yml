@@ -52,6 +52,9 @@ messages:
     invalid-args: "Invalid arguments."
     no-permission: "You don't have the permission to do that."
 
+# In seconds
+invitation-timeout: 30
+
 # If enabled, game master will be able to /voidgame troll <player>
 # and it will give that player the same item every time
 troll:

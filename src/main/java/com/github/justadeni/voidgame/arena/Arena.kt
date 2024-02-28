@@ -11,14 +11,15 @@ import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.inventory.PlayerInventory
 
 
 class Arena private constructor(val participants: List<Participant>, pillarDist: Int, pillarHeight: Int, pillarMaterial: Material, itemTime: Int, private val totalRounds: Int) {
 
-    data class Participant(val beforePos: Location, var player: Player, var won: Int, var trollmode: Boolean = false)
+    data class Participant(val beforePos: Location, val beforeInventory: PlayerInventory, var player: Player, var won: Int, var trollmode: Boolean = false)
 
     class ArenaBuilder() {
-        val players = mutableSetOf<Player>()
+        val players = mutableListOf<Player>()
 
         var pillarDist = Config.int("config.defaults.distance-between-pillars.medium")
 
@@ -31,8 +32,9 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
         var totalRounds = Config.int("config.defaults.total-rounds.default")
 
         fun build(): Arena {
-            val arena = Arena(players.map { Participant(it.location, it, 0) }, pillarDist, pillarHeight, pillarMaterial, itemTime, totalRounds)
+            val arena = Arena(players.map { Participant(it.location, it.inventory, it, 0) }, pillarDist, pillarHeight, pillarMaterial, itemTime, totalRounds)
             Arenas.add(arena)
+            arena.startRound()
             return arena
         }
     }
@@ -60,10 +62,6 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
     )
 
     val placedBlocks = mutableListOf<Location>()
-
-    init {
-        startRound()
-    }
 
     private fun startRound() {
         round++
