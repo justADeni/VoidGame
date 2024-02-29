@@ -1,6 +1,7 @@
 package com.github.justadeni.voidgame.gui
 
 import com.github.justadeni.voidgame.VoidGame
+import com.github.justadeni.voidgame.config.Config
 import me.xflyiwnl.colorfulgui.`object`.Gui
 import me.xflyiwnl.colorfulgui.`object`.PaginatedGui
 import me.xflyiwnl.colorfulgui.provider.ColorfulProvider
@@ -34,8 +35,15 @@ class ChooseMaterialGUI(val player: Player, val adjustGUI: AdjustGUI): ColorfulP
             .flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
             .build()
         )
+
+        if (!Config.bool("config.defaults.material.editable"))
+            return
+
         Material.entries
             .asSequence()
+            .filterNot { material ->
+                Config.list("config.defaults.material.filter").any { it.contains(material.toString()) }
+            }
             .filter { it.isBlock }
             .forEach { material -> gui.addItem(
                 VoidGame.gui.staticItem()

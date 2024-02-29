@@ -1,7 +1,6 @@
 defaults:
   start-y: 70
   height:
-    editable: true
     min: 3
     max: 30
     default: 10

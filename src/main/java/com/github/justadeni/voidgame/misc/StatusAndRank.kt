@@ -41,4 +41,16 @@ object StatusAndRank {
 
         return Pair(Status.FREE, Rank.OTHER)
     }
+
+    fun groupedPlayers(player: Player): List<Player> {
+        val game = Arenas.ofPlayer(player)
+        if (game != null)
+            return game.participants.map { it.player }
+
+        val lobby = ArenaBuilders.ofPlayer(player)
+        if (lobby != null)
+            return lobby.players
+
+        return emptyList()
+    }
 }

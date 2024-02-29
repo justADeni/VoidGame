@@ -56,7 +56,7 @@ class Command: CommandExecutor {
                     Config.string("messages.command.invalid-args").sendTo(sender)
                     return true
                 }
-                val string = if (participant.trollmode) {
+                if (participant.trollmode) {
                     Config.string("messages.command.untroll")
                 } else {
                     Config.string("messages.command.troll")
