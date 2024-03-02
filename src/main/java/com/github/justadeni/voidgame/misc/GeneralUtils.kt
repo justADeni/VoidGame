@@ -2,8 +2,10 @@ package com.github.justadeni.voidgame.misc
 
 import com.github.justadeni.voidgame.VoidGame
 import com.github.justadeni.voidgame.config.Config
+import com.github.justadeni.voidgame.misc.TextUtils.toComponent
 import com.zorbeytorunoglu.kLib.extensions.Inventory
 import com.zorbeytorunoglu.kLib.extensions.dropItemNaturally
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.enchantments.Enchantment
@@ -15,7 +17,10 @@ import org.bukkit.scheduler.BukkitRunnable
 object GeneralUtils {
 
     fun String.sendTo(sender: CommandSender) {
-        sender.sendMessage(this)
+        if (!this.contains("<"))
+            sender.sendMessage(this)
+        else
+            sender.spigot().sendMessage(this.toComponent())
     }
 
     fun Player.give(item: ItemStack) {
