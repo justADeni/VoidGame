@@ -138,16 +138,19 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
 
                 Scopes.supervisorScope.launch {
                     delay(3000)
-                    end()
+                    if (round == totalRounds)
+                        end()
+                    else
+                        startRound()
                 }
             }
         }
     }
 
     private fun checkSurvivors() {
-        val (alive, dead) = participants.partition { it.player.gameMode == GameMode.SURVIVAL }
+        val (alive, _) = participants.partition { it.player.gameMode == GameMode.SURVIVAL }
         if (alive.size == 1) {
-
+            announce(Event.WIN, alive[0].player)
         }
     }
 

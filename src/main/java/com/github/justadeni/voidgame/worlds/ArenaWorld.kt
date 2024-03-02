@@ -39,14 +39,13 @@ class ArenaWorld(
         val relangle = Math.toRadians(360.0 / playerAmount)
         val vertices = mutableListOf<Location>()
         for (i in 0 until playerAmount) {
-            val vertice = Location(
-                world,
-                pillarDist * cos(i * relangle),
-                Config.int("defaults.start-y") + pillarHeight.toDouble(),
-                pillarDist * sin(i * relangle)
-            )
-            vertice.block.type = material
-            vertices.add(vertice)
+            val x = pillarDist * cos(i * relangle)
+            val z = pillarDist * sin(i * relangle)
+            val starty = Config.int("defaults.start-y")
+            for (y in starty..pillarHeight) {
+                Location(world, x, y.toDouble(), z).block.type = material
+            }
+            vertices.add(Location(world, x, starty + pillarHeight.toDouble(), z))
         }
         vertices
     }
