@@ -119,10 +119,11 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
             }
 
             Event.WIN -> {
-                if (round < totalRounds)
-                    this.participants.forEach { "${player.name} won this round.".sendTo(it.player) }
-                else
-                    this.participants.forEach { "${player.name} won the game!".sendTo(it.player) }
+                this.participants.forEach { "${player.name} won this round.".sendTo(it.player) }
+                if (round >= totalRounds) {
+                    val winner = participants.maxBy { it.won }
+                    this.participants.forEach { "${winner.player.name} won the game with ${it.won} wins!".sendTo(it.player) }
+                }
 
                 val fw = player.world.spawnEntity(player.location, EntityType.FIREWORK) as Firework
                 val meta = fw.fireworkMeta
@@ -138,7 +139,7 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
 
                 Scopes.supervisorScope.launch {
                     delay(3000)
-                    if (round == totalRounds)
+                    if (round >= totalRounds)
                         end()
                     else
                         startRound()
@@ -150,6 +151,7 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
     private fun checkSurvivors() {
         val (alive, _) = participants.partition { it.player.gameMode == GameMode.SURVIVAL }
         if (alive.size == 1) {
+            alive[0].won++
             announce(Event.WIN, alive[0].player)
         }
     }
