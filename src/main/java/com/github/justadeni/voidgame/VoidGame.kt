@@ -27,6 +27,7 @@ class VoidGame : JavaPlugin() {
         saveDefaultConfig()
         getCommand("voidgame")!!.setExecutor(Command())
         getCommand("voidgame")!!.tabCompleter = TabComplete()
+        server.pluginManager.registerEvents(PlayerJoin(),this)
         server.pluginManager.registerEvents(PlayerMove(),this)
         server.pluginManager.registerEvents(PlayerDeath(),this)
         server.pluginManager.registerEvents(PlayerRespawn(), this)

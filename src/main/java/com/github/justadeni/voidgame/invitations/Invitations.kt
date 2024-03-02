@@ -28,8 +28,10 @@ object Invitations {
 
     fun accept(player: Player) {
         if (invitations.containsKey(player)) {
+            val arenabuilder = invitations.remove(player) ?: return
+            arenabuilder.players.add(player)
+            "${player.name} joined game queue.".sendTo(arenabuilder.players[0])
             "Joined the game queue.".sendTo(player)
-            invitations.remove(player)?.players?.add(player)
         } else {
             "Invalid invitation.".sendTo(player)
         }

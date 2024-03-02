@@ -1,15 +1,19 @@
 package com.github.justadeni.voidgame.arena
 
 import com.github.justadeni.voidgame.config.Config
-import com.github.justadeni.voidgame.misc.GeneralUtils.give
 import com.github.justadeni.voidgame.misc.FilteredItems
+import com.github.justadeni.voidgame.misc.GeneralUtils.give
+import com.github.justadeni.voidgame.misc.GeneralUtils.sendTo
 import com.github.justadeni.voidgame.misc.RepeatingTask
 import com.github.justadeni.voidgame.worlds.ArenaWorld
 import com.zorbeytorunoglu.kLib.extensions.clearAllInventory
 import com.zorbeytorunoglu.kLib.extensions.heal
-import org.bukkit.GameMode
-import org.bukkit.Location
-import org.bukkit.Material
+import com.zorbeytorunoglu.kLib.task.Scopes
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.bukkit.*
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.Firework
 import org.bukkit.entity.Player
 import org.bukkit.inventory.PlayerInventory
 
@@ -36,6 +40,12 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
             Arenas.add(arena)
             arena.startRound()
             return arena
+        }
+
+        fun cancel() {
+            ArenaBuilders.remove(this)
+            this.players.clear()
+            this.players.forEach { "Queue was cancelled by leader.".sendTo(it) }
         }
     }
 
@@ -89,11 +99,49 @@ class Arena private constructor(val participants: List<Participant>, pillarDist:
         WIN
     }
 
-    fun announce(event: Event, player: Player): Unit = when(event) {
-        Event.LEAVE -> TODO()
-        Event.REJOIN -> TODO()
-        Event.DIE -> TODO()
-        Event.WIN -> TODO()
+    fun announce(event: Event, player: Player) {
+        when(event) {
+            Event.LEAVE -> {
+                this.participants.forEach { "${player.name} left the game.".sendTo(it.player) }
+            }
+
+            Event.REJOIN -> {
+                this.participants.forEach { "${player.name} rejoined the game.".sendTo(it.player) }
+            }
+
+            Event.DIE -> {
+                if (round < totalRounds)
+                    "You died. You will respawn in the next round.".sendTo(player)
+                else
+                    "You died.".sendTo(player)
+
+                checkSurvivors()
+            }
+
+            Event.WIN -> {
+                if (round < totalRounds)
+                    this.participants.forEach { "${player.name} won this round.".sendTo(it.player) }
+                else
+                    this.participants.forEach { "${player.name} won the game!".sendTo(it.player) }
+
+                val fw = player.world.spawnEntity(player.location, EntityType.FIREWORK) as Firework
+                val meta = fw.fireworkMeta
+                meta.addEffects(
+                    FireworkEffect.builder()
+                    .withColor(Color.AQUA)
+                    .withFade(Color.LIME)
+                    .withTrail()
+                    .withFlicker()
+                    .build()
+                )
+                fw.fireworkMeta = meta
+
+                Scopes.supervisorScope.launch {
+                    delay(3000)
+                    end()
+                }
+            }
+        }
     }
 
     private fun checkSurvivors() {

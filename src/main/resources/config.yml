@@ -39,8 +39,6 @@ messages:
   player-won: "%player% won this round."
   not-found: ""
   command:
-    troll: "Enabled troll mode for %player%."
-    untroll: "Disabled troll mode for %player%."
     reloaded: "Config reloaded."
     console: "Only a player can do this."
     invalid-args: "Invalid arguments."

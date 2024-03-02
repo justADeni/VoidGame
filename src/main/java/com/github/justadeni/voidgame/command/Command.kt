@@ -1,8 +1,15 @@
 package com.github.justadeni.voidgame.command
 
+import com.github.justadeni.voidgame.arena.Arena
+import com.github.justadeni.voidgame.arena.ArenaBuilders
 import com.github.justadeni.voidgame.arena.Arenas
 import com.github.justadeni.voidgame.config.Config
+import com.github.justadeni.voidgame.gui.AdjustGUI
+import com.github.justadeni.voidgame.invitations.Invitations
 import com.github.justadeni.voidgame.misc.GeneralUtils.sendTo
+import com.github.justadeni.voidgame.misc.Rank
+import com.github.justadeni.voidgame.misc.Status
+import com.github.justadeni.voidgame.misc.StatusAndRank
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -31,6 +38,8 @@ class Command: CommandExecutor {
             return true
         }
 
+        val (status, rank) = StatusAndRank.get(sender)
+
         when (args[0].lowercase()) {
             "troll" -> {
                 if (!Config.bool("troll.enabled")) {
@@ -57,14 +66,89 @@ class Command: CommandExecutor {
                     return true
                 }
                 if (participant.trollmode) {
-                    Config.string("messages.command.untroll")
+                    "Disabled troll mode for ${player.name}."
                 } else {
-                    Config.string("messages.command.troll")
-                }
-                    .replace("%player%", player.name)
-                    .sendTo(sender)
+                    "Enabled troll mode for ${player.name}."
+                }.sendTo(sender)
 
                 participant.trollmode = !participant.trollmode
+            }
+            "create" -> {
+                if (status != Status.FREE) {
+                    "Cannot create an arena.".sendTo(sender)
+                    return true
+                }
+
+                val arenabuilder = Arena.ArenaBuilder()
+                arenabuilder.players.add(sender)
+                "Arena created. Invite players using (/vg invite)<~vg invite > (Click here to setup.)</vg setup>".sendTo(sender)
+            }
+            "invite" -> {
+                if (status != Status.FREE || rank != Rank.LEADER) {
+                    "Cannot invite.".sendTo(sender)
+                    return true
+                }
+                if (args.size < 2) {
+                    Config.string("messages.command.invalid-args").sendTo(sender)
+                    return true
+                }
+                val player = Bukkit.getPlayer(args[1])
+                if (player == null) {
+                    Config.string("messages.command.invalid-args").sendTo(sender)
+                    return true
+                }
+                val inviteearena = ArenaBuilders.ofPlayer(player)
+                if (Invitations.contains(player) || inviteearena != null) {
+                    "Cannot invite ${player.name}.".sendTo(sender)
+                    return true
+                }
+                "${sender.name} invited you to a VoidGame. (Click here)</vg accept> to accept.".sendTo(player)
+                Invitations.add(player, ArenaBuilders.ofPlayer(sender)!!)
+            }
+            "accept" -> {
+                if (!Invitations.contains(sender)) {
+                    "You don't have an active invite.".sendTo(sender)
+                    return true
+                }
+                Invitations.accept(sender)
+            }
+            "leave" -> {
+                val arenabuilder = ArenaBuilders.ofPlayer(sender)
+                if (arenabuilder == null) {
+                    "You aren't in any queue".sendTo(sender)
+                    return true
+                }
+                if (arenabuilder.players[0] == sender) {
+                    "You can't leave your own queue. Use (/vg cancel)</vg cancel> instead".sendTo(sender)
+                    return true
+                }
+                arenabuilder.players.remove(sender)
+                "You left the queue".sendTo(sender)
+                "${sender.name} left the queue".sendTo(arenabuilder.players[0])
+            }
+            "cancel" -> {
+                val arenabuilder = ArenaBuilders.ofPlayer(sender)
+                if (arenabuilder == null) {
+                    "You aren't in any queue".sendTo(sender)
+                    return true
+                }
+                if (arenabuilder.players[0] != sender) {
+                    "You aren't the leader of this queue.".sendTo(sender)
+                    return true
+                }
+                arenabuilder.cancel()
+            }
+            "setup" -> {
+                val arenabuilder = ArenaBuilders.ofPlayer(sender)
+                if (arenabuilder == null) {
+                    "You aren't in any queue".sendTo(sender)
+                    return true
+                }
+                if (arenabuilder.players[0] != sender) {
+                    "You aren't the leader of this queue.".sendTo(sender)
+                    return true
+                }
+                AdjustGUI(sender, arenabuilder).open()
             }
         }
         return true

@@ -5,17 +5,15 @@ import com.github.justadeni.voidgame.arena.Arena
 import com.github.justadeni.voidgame.config.Config
 import com.github.justadeni.voidgame.misc.CappedInteger
 import com.github.justadeni.voidgame.misc.GeneralUtils.sendTo
-import com.github.justadeni.voidgame.misc.TextUtils.replace
 import me.xflyiwnl.colorfulgui.`object`.Gui
-import me.xflyiwnl.colorfulgui.`object`.action.GuiAction
 import me.xflyiwnl.colorfulgui.provider.ColorfulProvider
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.PlayerInventory
-import org.bukkit.scheduler.BukkitRunnable
 
 class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): ColorfulProvider<Gui>(player, 1) {
 
@@ -23,7 +21,7 @@ class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): Color
 
     //masks in this order: Description, Decrement, Increment
     private fun addButtons(name: String, materials: Array<Material>, masks: String, cappedInteger: CappedInteger) {
-        gui.addMask(name[0].toString(), VoidGame.gui.staticItem()
+        gui.addMask(masks[0].toString(), VoidGame.gui.staticItem()
             .material(materials[0])
             .name(name)
             .flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
@@ -32,22 +30,36 @@ class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): Color
         if (cappedInteger.final)
             return
 
-        gui.addMask(name[1].toString(), VoidGame.gui.staticItem()
+        gui.addMask(masks[1].toString(), VoidGame.gui.staticItem()
             .material(materials[1])
             .name("&e-1")
             .action {
-                if (cappedInteger - 1 == CappedInteger.Result.DENIED)
-                    "&cYou've reached the limit.".sendTo(player)
+                when (cappedInteger - 1) {
+                    CappedInteger.Result.APPROVED -> {
+                        player.playSound(player, Sound.ENTITY_CHICKEN_EGG, 0.5f, 0.75f)
+                    }
+                    CappedInteger.Result.DENIED -> {
+                        "&cYou've reached the limit.".sendTo(player)
+                        player.playSound(player, Sound.BLOCK_ANVIL_BREAK, 0.5f, 1.0f)
+                    }
+                }
             }
             .flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
             .build()
         )
-        gui.addMask(name[2].toString(), VoidGame.gui.staticItem()
+        gui.addMask(masks[2].toString(), VoidGame.gui.staticItem()
             .material(materials[2])
             .name("&e+1")
             .action {
-                if (cappedInteger + 1 == CappedInteger.Result.DENIED)
-                    "&cYou've reached the limit.".sendTo(player)
+                when (cappedInteger + 1) {
+                    CappedInteger.Result.APPROVED -> {
+                        player.playSound(player, Sound.ENTITY_CHICKEN_EGG, 0.5f, 1.25f)
+                    }
+                    CappedInteger.Result.DENIED -> {
+                        "&cYou've reached the limit.".sendTo(player)
+                        player.playSound(player, Sound.BLOCK_ANVIL_BREAK, 0.5f, 1.0f)
+                    }
+                }
             }
             .flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
             .build()
@@ -71,7 +83,7 @@ class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): Color
             materials = arrayOf(Material.COBBLED_DEEPSLATE, Material.STONE_BUTTON, Material.STONE_BUTTON),
             masks = "QWE",
             CappedInteger(
-                Config.int("config.defaults.height.default"),
+                arenaBuilder::pillarHeight,
                 Config.int("config.defaults.height.min"),
                 Config.int("config.defaults.height.max")
             )
@@ -82,7 +94,7 @@ class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): Color
             materials = arrayOf(Material.DARK_PRISMARINE, Material.PRISMARINE_CRYSTALS, Material.PRISMARINE_CRYSTALS),
             masks = "RTY",
             CappedInteger(
-                Config.int("config.defaults.distance-between-pillars.default"),
+                arenaBuilder::pillarDist,
                 Config.int("config.defaults.distance-between-pillars.min"),
                 Config.int("config.defaults.distance-between-pillars.max")
             )
@@ -93,7 +105,7 @@ class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): Color
             materials = arrayOf(Material.CLOCK, Material.GOLD_NUGGET, Material.GOLD_NUGGET),
             masks = "UIP",
             CappedInteger(
-                Config.int("config.defaults.itemtime.default"),
+                arenaBuilder::itemTime,
                 Config.int("config.defaults.itemtime.min"),
                 Config.int("config.defaults.itemtime.max")
             )
@@ -104,7 +116,7 @@ class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): Color
             materials = arrayOf(Material.END_STONE, Material.ENDER_EYE, Material.ENDER_EYE),
             masks = "ASD",
             CappedInteger(
-                Config.int("config.defaults.total-rounds.default"),
+                arenaBuilder::totalRounds,
                 Config.int("config.defaults.total-rounds.min"),
                 Config.int("config.defaults.total-rounds.max")
             )
