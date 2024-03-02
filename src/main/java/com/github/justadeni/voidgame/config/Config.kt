@@ -208,7 +208,7 @@ object Config {
             Material.STONE
         }
     }
-
+    /*
     fun configurationSection(path: String): List<String> {
         return try {
             get<ConfigurationSection>(path)?.getKeys(false)?.toList() ?: configurationSection(path)
@@ -216,5 +216,5 @@ object Config {
             emptyList()
         }
     }
-
+    */
 }

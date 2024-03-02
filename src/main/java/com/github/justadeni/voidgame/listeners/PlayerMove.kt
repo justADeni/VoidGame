@@ -16,8 +16,8 @@ class PlayerMove: Listener {
             return
 
         if (e.to!!.y < e.from.y) {
-            val pheight = Config.int("pillar.height")
-            val starty = Config.int("pillar.start-y")
+            val pheight = Config.int("config.defaults.height.max")
+            val starty = Config.int("config.defaults.start-y")
             if (e.to!!.y < starty - pheight) {
                 val arena = Arenas.ofPlayer(e.player) ?: return
                 val participant = arena.participants.firstOrNull { it.player == e.player } ?: return

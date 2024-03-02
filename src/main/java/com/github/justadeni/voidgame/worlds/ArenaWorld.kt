@@ -22,7 +22,7 @@ class ArenaWorld(
         Location(
             world,
             0.0,
-            Config.int("defaults.start-y") + pillarHeight + 10.0,
+            Config.int("config.defaults.start-y") + pillarHeight + 2.0,
             0.0
         )
     }
@@ -41,7 +41,7 @@ class ArenaWorld(
         for (i in 0 until playerAmount) {
             val x = pillarDist * cos(i * relangle)
             val z = pillarDist * sin(i * relangle)
-            val starty = Config.int("defaults.start-y")
+            val starty = Config.int("config.defaults.start-y")
             for (y in starty..pillarHeight) {
                 Location(world, x, y.toDouble(), z).block.type = material
             }

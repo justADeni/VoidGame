@@ -44,6 +44,9 @@ messages:
     invalid-args: "Invalid arguments."
     no-permission: "You don't have the permission to do that."
 
+# Hover text for messages with (clickable) components
+default-hover-text: "Click here"
+
 # In seconds
 invitation-timeout: 30
 

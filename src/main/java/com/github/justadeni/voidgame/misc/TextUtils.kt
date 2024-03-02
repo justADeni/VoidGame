@@ -39,7 +39,7 @@ object TextUtils {
             if (action.split(",", limit = 2).size > 1){
                 component.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, listOf(TextComponent(ColorUtils.colorize(action.substringAfterLast(",")))).toTypedArray())
             } else {
-                component.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, listOf(TextComponent(ColorUtils.colorize(Config.string("country-config.default-hover-text")))).toTypedArray())
+                component.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, listOf(TextComponent(ColorUtils.colorize(Config.string("config.default-hover-text")))).toTypedArray())
             }
             val primary = action.substringBeforeLast(",").substring(1)
 
@@ -182,18 +182,5 @@ object TextUtils {
             if (this.contains(item, ignoreCase = true))
                 return true
         return false
-    }
-
-    fun String.asAction(player: Player): () -> Unit {
-
-        if (Config.bool("country-config.debug-mode"))
-            Logger.log("${player.name}: $this")
-
-        if (this == "Error" || this.isBlank())
-            return {}
-        return {
-            for (split in this.split("|"))
-                player.performCommand(split.replace("/", ""))
-        }
     }
 }
