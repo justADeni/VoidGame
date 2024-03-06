@@ -26,7 +26,7 @@ class VoidGame : JavaPlugin() {
         gui = ColorfulGUI(this)
         saveDefaultConfig()
         getCommand("voidgame")!!.setExecutor(Command())
-        getCommand("voidgame")!!.tabCompleter = TabComplete()
+        getCommand("voidgame")!!.setTabCompleter(TabComplete())
         server.pluginManager.registerEvents(PlayerJoin(),this)
         server.pluginManager.registerEvents(PlayerMove(),this)
         server.pluginManager.registerEvents(PlayerDeath(),this)

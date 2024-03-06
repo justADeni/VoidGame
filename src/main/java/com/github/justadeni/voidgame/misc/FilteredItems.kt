@@ -9,8 +9,12 @@ object FilteredItems {
     private lateinit var entries: List<Material>// = Material.entries.filterNot { entry -> Config.list("drop-item.filter").any { entry.toString().contains(it) } }
 
     fun reload() {
-        entries = Material.entries.filterNot { entry -> Config.list("drop-item.filter").any { entry.toString().contains(it) } }
+        entries = Material.entries
+            .filterNot { entry -> Config.list("drop-item.filter").any { entry.toString().contains(it) } }
+            .filter { it.isBlock }
     }
+
+    //fun entries() = entries
 
     fun random() = ItemStack(entries.random())
 

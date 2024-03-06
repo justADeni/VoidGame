@@ -81,7 +81,8 @@ class Command: CommandExecutor {
 
                 val arenabuilder = Arena.ArenaBuilder()
                 arenabuilder.players.add(sender)
-                "Arena created. Invite players using (/vg invite)<~vg invite > (Click here to setup.)</vg setup>".sendTo(sender)
+                ArenaBuilders.add(arenabuilder)
+                "Arena created. Invite players using <&n/vg invite or click here>(-vg invite ). </vg setup or click here to setup.>(/vg setup)".sendTo(sender)
             }
             "invite" -> {
                 if (status != Status.FREE || rank != Rank.LEADER) {
@@ -102,7 +103,7 @@ class Command: CommandExecutor {
                     "Cannot invite ${player.name}.".sendTo(sender)
                     return true
                 }
-                "${sender.name} invited you to a VoidGame. (Click here)</vg accept> to accept.".sendTo(player)
+                "${sender.name} invited you to a VoidGame. <&n/vg accept or click here>(/vg accept) to accept.".sendTo(player)
                 Invitations.add(player, ArenaBuilders.ofPlayer(sender)!!)
             }
             "accept" -> {
@@ -119,7 +120,7 @@ class Command: CommandExecutor {
                     return true
                 }
                 if (arenabuilder.players[0] == sender) {
-                    "You can't leave your own queue. Use (/vg cancel)</vg cancel> instead".sendTo(sender)
+                    "You can't leave your own queue. Use <&n/vg cancel>(/vg cancel) instead".sendTo(sender)
                     return true
                 }
                 arenabuilder.players.remove(sender)
@@ -137,6 +138,7 @@ class Command: CommandExecutor {
                     return true
                 }
                 arenabuilder.cancel()
+                "Queue disbanded.".sendTo(sender)
             }
             "setup" -> {
                 val arenabuilder = ArenaBuilders.ofPlayer(sender)

@@ -11,11 +11,12 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.PlayerInventory
 
-class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): ColorfulProvider<Gui>(player, 1) {
+class AdjustGUI(@get:JvmName("gui_player") val player: Player, val arenaBuilder: Arena.ArenaBuilder): ColorfulProvider<Gui>(player, 1) {
 
     var material = Config.material("config.defaults.material.default")
 
@@ -156,6 +157,10 @@ class AdjustGUI(val player: Player, val arenaBuilder: Arena.ArenaBuilder): Color
                 break
             }
         }
+    }
+
+    override fun onClose(event: InventoryCloseEvent) {
+        arenaBuilder.pillarMaterial = material
     }
 
     fun open() = VoidGame.gui.gui()

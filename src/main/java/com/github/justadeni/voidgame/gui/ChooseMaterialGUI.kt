@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.PlayerInventory
 
-class ChooseMaterialGUI(val player: Player, val adjustGUI: AdjustGUI): ColorfulProvider<PaginatedGui>(player) {
+class ChooseMaterialGUI(@get:JvmName("gui_player") val player: Player, val adjustGUI: AdjustGUI): ColorfulProvider<PaginatedGui>(player) {
 
     override fun init() {
         gui.addMask("B", VoidGame.gui.staticItem()
@@ -48,6 +48,7 @@ class ChooseMaterialGUI(val player: Player, val adjustGUI: AdjustGUI): ColorfulP
             .forEach { material -> gui.addItem(
                 VoidGame.gui.staticItem()
                     .material(material)
+                    //.lore(emptyList())
                     .action {
                         adjustGUI.material = material
                         adjustGUI.open()
